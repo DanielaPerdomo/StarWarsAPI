@@ -45,6 +45,25 @@ def handle_hello():
 
     return jsonify(response_body), 200
 
+#Desde aqui creamos los Endpoints del Proyecto de StarWars
+@app.route('/todos', methods=['GET'])
+def hello_world():
+    json_text = jsonify(todos)
+    return json_text
+
+@app.route('/todos', methods=['POST'])
+def add_new_todo():
+    request_body = request.json
+    todos.append(request_body)
+    json_body = jsonify(todos)
+    return json_body
+
+@app.route('/todos/<int:position>', methods=['DELETE'])
+def delete_todo(position):
+    todos.pop(position - 1)
+    json_todos = jsonify(todos)
+    return json_todos
+
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
