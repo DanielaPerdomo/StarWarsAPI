@@ -2,29 +2,31 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-class User(db.Model):
+class User(db.Model):#(FATHER)
     id = db.Column(db.Integer, primary_key=True)
+    name= db.Column(db.String(120), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
-    #Relacion con Planets (Father)
-    planets = db.relationship("Planets", back_populates="user")
-    #Relacion con Characters (Father)
-    characters = db.relationship("Characters", back_populates="user")
+    #Relacion con FavPlanets 
+    favPlanets = db.relationship("FavPlanets", backref="user")
+    #Relacion con FavCharacters 
+    favCharacters = db.relationship("FavCharacters", backref="user")
 
 #Esto se debe repetir en cada tabla
     def __repr__(self):
-        return '<User %r>' % self.username
+        return '<User %r>' % self.name
 
     def serialize(self):
         return {
             "id": self.id,
+            "name": self.name,
             "email": self.email,
             # do not serialize the password, its a security breach
         }
     
 #Aqui debemos crear nuestras tablas para las relaciones
-class Planets(db.Model):
+class Planets(db.Model): #(FATHER)
     __tablename__ = 'planets'
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
@@ -37,16 +39,12 @@ class Planets(db.Model):
     gravity = db.Column(db.String(50), unique=True, nullable=False)
     terrain = db.Column(db.String(50), unique=True, nullable=False)
     surface_water = db.Column(db.String(50), unique=True, nullable=False)
-    climate = db.Column(db.Strin50(50), unique=True, nullable=False)
-    #Relacion con User (Child)
-    #user = db.relationship("User", back_populates="planets")
+    climate = db.Column(db.String(50), unique=True, nullable=False)
     #Relacion con el FavPlanets (Father)
-    favPlanets_id = db.Column(db.ForeignKey("favPlanets.id"))
-    favPlanets = db.relationship("FavPlanets", back_populates="planets")
-
+    favPlanets = db.relationship("FavPlanets", backref="planets")
 
     def __repr__(self):
-        return '<Planets %r>' % self.username
+        return '<Planets %r>' % self.full_name
 
     def serialize(self):
         return {
@@ -67,9 +65,14 @@ class FavPlanets(db.Model):
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
     id = db.Column(db.Integer, primary_key=True)
+    #Relacion con la tabla User
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    #Relacion con la tabla de Planets
+    planets_id = db.Column(db.Integer, db.ForeignKey("planets.id"), nullable=False)
+
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        return '<User %r>' % self.id
 
     def serialize(self):
         return {
@@ -77,7 +80,7 @@ class FavPlanets(db.Model):
             "email": self.email,
         }
 
-class Characters(db.Model):
+class Characters(db.Model): #(Father)
     __tablename__ = 'characters'
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
@@ -90,17 +93,12 @@ class Characters(db.Model):
     gender = db.Column(db.String(50), unique=True, nullable=False)
     hair_color = db.Column(db.String(50), unique=True, nullable=False)
     skin_color = db.Column(db.String(50), unique=True, nullable=False)
-    homeworld = db.Column(db.Strin50(50), unique=True, nullable=False)
-    #Relacion con User (Child)
-    #user = db.relationship("User", back_populates="characters")
-    #Relacion con FavCharacters (Child)
-    favCharacters_id = db.Column(db.ForeignKey("favCharacters.id"))
-    favCharacters = db.relationship("FavCharacters", back_populates="characters")
-
-
+    homeworld = db.Column(db.String(50), unique=True, nullable=False)
+    #Relacion con FavCharacters 
+    favCharacters = db.relationship("FavCharacters", backref="characters")
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        return '<User %r>' % self.full_name
 
     def serialize(self):
         return {
@@ -121,9 +119,13 @@ class FavCharacters(db.Model):
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
     id = db.Column(db.Integer, primary_key=True)
+    #Relacion con la tabla User
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    #Relacion con la tabla de Characters
+    characters_id = db.Column(db.Integer, db.ForeignKey("characters.id"), nullable=False)
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        return '<User %r>' % self.id
 
     def serialize(self):
         return {
