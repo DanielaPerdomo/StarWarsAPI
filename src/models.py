@@ -29,25 +29,25 @@ class User(db.Model):#(FATHER)
     
 #Aqui debemos crear nuestras tablas para las relaciones
 class Planets(db.Model): #(FATHER)
-    __tablename__ = 'planets'
+    __tablename__ = "planets"
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), unique=False, nullable=False)
-    created = db.Column(db.String(100), unique=False, nullable=False)
-    populations = db.Column(db.String(50), unique=True, nullable=False)
-    rotation_period = db.Column(db.String(50), unique=True, nullable=False)
-    orbital_period = db.Column(db.String(50), unique=True, nullable=False)
-    diameter = db.Column(db.String(50), unique=True, nullable=False)
-    gravity = db.Column(db.String(50), unique=True, nullable=False)
-    terrain = db.Column(db.String(50), unique=True, nullable=False)
-    surface_water = db.Column(db.String(50), unique=True, nullable=False)
-    climate = db.Column(db.String(50), unique=True, nullable=False)
+    name = db.Column(db.String(50), unique=True, nullable=False)
+    populations = db.Column(db.String(50), unique=False, nullable=False)
+    rotation_period = db.Column(db.String(50), unique=False, nullable=False)
+    orbital_period = db.Column(db.String(50), unique=False, nullable=False)
+    diameter = db.Column(db.String(50), unique=False, nullable=False)
+    gravity = db.Column(db.String(50), unique=False, nullable=False)
+    terrain = db.Column(db.String(50), unique=False, nullable=False)
+    surface_water = db.Column(db.String(50), unique=False, nullable=False)
+    climate = db.Column(db.String(50), unique=False, nullable=False)
+
     #Relacion con el FavPlanets (Father)
     favPlanets = db.relationship("FavPlanets", backref="planets")
 
     def __repr__(self):
-        return '<Planets %r>' % self.full_name
+        return '<Planets %r>' % self.name
 
     def serialize(self):
         return {
@@ -65,7 +65,7 @@ class Planets(db.Model): #(FATHER)
         }
 
 class FavPlanets(db.Model):
-    __tablename__ = 'favPlanets'
+    __tablename__ = "favPlanets"
   
     id = db.Column(db.Integer, primary_key=True)
     #Relacion con la tabla User
@@ -83,20 +83,20 @@ class FavPlanets(db.Model):
         }
 
 class Characters(db.Model): #(Father)
-    __tablename__ = 'characters'
+    __tablename__ = "characters"
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
     id = db.Column(db.Integer, primary_key=True)
     full_name = db.Column(db.String(50), unique=True, nullable=False)
-    birth_year = db.Column(db.String(50), unique=True, nullable=False)
-    species = db.Column(db.String(50), unique=True, nullable=False)
-    height = db.Column(db.String(50), unique=True, nullable=False)
-    mass = db.Column(db.String(50), unique=True, nullable=False)
-    gender = db.Column(db.String(50), unique=True, nullable=False)
-    hair_color = db.Column(db.String(50), unique=True, nullable=False)
-    skin_color = db.Column(db.String(50), unique=True, nullable=False)
-    homeworld = db.Column(db.String(50), unique=True, nullable=False)
-    created = db.Column(db.String(100), unique=False, nullable=False)
+    birth_year = db.Column(db.String(50), unique=False, nullable=False)
+    species = db.Column(db.String(50), unique=False, nullable=False)
+    height = db.Column(db.String(50), unique=False, nullable=False)
+    mass = db.Column(db.String(50), unique=False, nullable=False)
+    gender = db.Column(db.String(50), unique=False, nullable=False)
+    hair_color = db.Column(db.String(50), unique=False, nullable=False)
+    skin_color = db.Column(db.String(50), unique=False, nullable=False)
+    homeworld = db.Column(db.String(50), unique=False, nullable=False)
+    
     #Relacion con FavCharacters 
     favCharacters = db.relationship("FavCharacters", backref="characters")
 
@@ -119,7 +119,7 @@ class Characters(db.Model): #(Father)
         }
     
 class FavCharacters(db.Model):
-    __tablename__ = 'favCharacters'
+    __tablename__ = "favCharacters"
 
     id = db.Column(db.Integer, primary_key=True)
     #Relacion con la tabla User
